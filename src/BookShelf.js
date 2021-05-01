@@ -6,7 +6,7 @@ class BookShelf extends Component{
     static propsTypes = {
         title: PropTypes.string.isRequired,
         books : PropTypes.array.isRequired,
-        handleShelveChange: PropTypes.func.isRequired 
+        handleShelfChange: PropTypes.func.isRequired 
     };
 
     //Update book shelve in the backend
@@ -19,10 +19,11 @@ class BookShelf extends Component{
 
         //update the book shelf in the backend    
         BooksAPI.update(book, shelf);
-        this.props.handleShelveChange(book, shelf);
+        this.props.handleShelfChange(book, shelf);
     }
 
     render(){
+        debugger
         const {title, books} = this.props;
 
         return(
@@ -46,9 +47,11 @@ class BookShelf extends Component{
                         </div>
                       </div>
                       <div className="book-title">{book.title}</div>
-                      {book.authors.map(author =>(
-                        <div key= {author} className="book-authors">{author}</div>
-                      ))}
+                      {book.authors? (book.authors.map(author =>(
+                            <div key= {author} className="book-authors">{author}</div>
+                          ))) : (
+                            <div className="book-authors">Unknown Author!</div>
+                          )}
                     </div>
                   </li>
                ))}

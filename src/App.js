@@ -54,7 +54,7 @@ class BooksApp extends React.Component {
     }))
   }
 
-  handleShelveChange(book, shelf){
+  handleShelfChange(book, shelf){
       debugger
       let {currentlyReadingList, wantToReadList, readList}  = this.state;
       const originalBookShelf = book.shelf; 
@@ -109,7 +109,7 @@ class BooksApp extends React.Component {
       <div className="app">
         {this.state.showSearchPage ? (
           
-        <BookSearch updateSate ={this.updateSate}/>
+        <BookSearch handleShelfChange = {this.handleShelfChange.bind(this)} updateSate ={this.updateSate}/>
 
         ) : (
           <div className="list-books">
@@ -119,7 +119,7 @@ class BooksApp extends React.Component {
             <div className="list-books-content">
               <div>
                 {shelves.map(shelve =>(
-                  <BookShelf key={shelve.title} title={shelve.title} books={shelve.books} handleShelveChange={this.handleShelveChange.bind(this)}/>
+                  <BookShelf key={shelve.title} title={shelve.title} books={shelve.books} handleShelfChange={this.handleShelfChange.bind(this)}/>
                 ))}
               </div>
             </div>
