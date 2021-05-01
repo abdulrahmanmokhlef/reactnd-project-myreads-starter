@@ -93,7 +93,6 @@ class BooksApp extends React.Component {
   }
   
   render() {
-    debugger
     /**Set the shelves data*/
     const shelves = [
       {title:'Currently Reading', books: this.state.currentlyReadingList},

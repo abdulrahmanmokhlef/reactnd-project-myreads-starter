@@ -1,23 +1,28 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI'
 
 class BookShelf extends Component{
-
-    
+    static propsTypes = {
+        title: PropTypes.string.isRequired,
+        books : PropTypes.array.isRequired,
+        handleShelveChange: PropTypes.func.isRequired 
+    };
 
     //Update book shelve in the backend
     handleShelfChange(book, event) {
         const shelf = event.target.value;
-        
+
+        //if click on the current shelf do nothing.
         if(shelf === book.shelf)
             return;
 
+        //update the book shelf in the backend    
         BooksAPI.update(book, shelf);
         this.props.handleShelveChange(book, shelf);
     }
 
     render(){
-        debugger
         const {title, books} = this.props;
 
         return(
