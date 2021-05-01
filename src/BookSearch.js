@@ -5,12 +5,13 @@ import * as BooksAPI from './BooksAPI';
 
 class BookSearch extends Component{
     static propTypes = {
-        handleShelfChange: PropTypes.func.isRequired
+        handleShelfChange: PropTypes.func.isRequired,
+        allBooks: PropTypes.array.isRequired,
+        tempImage: PropTypes.string.isRequired 
     };
     
     state = {
-        books: [],
-        showSearchPage: false
+        books: []
     };
 
     componentDidMount(){
@@ -27,6 +28,35 @@ class BookSearch extends Component{
        
         
     }
+
+    // // this function is alternative solution to filter books but it doesn't best practice 
+    // search(event){
+    //     debugger
+    //     const self = this;
+    //     const { allBooks } = this.props;
+    //     const query = event.target.value.trim();
+    //     const filteredBooks = allBooks.filter(book => {
+    //         book.title.toLowerCase().includes(query.toLowerCase())
+    //     });
+
+    //     //clear timeout every time search funcution is called 
+    //     clearTimeout(self.timeout);
+    //     if(query === '') {
+    //         this.clearBookList();
+    //         return;    
+    //     }
+        
+    //     //set timeout to 1 second in order to start search right after the user stop typing.
+    //     self.timeout = setTimeout(function () {
+    //         debugger
+    //         self.setState((currentState)=>({
+    //             books: allBooks.filter(book => (
+    //                 book.title.toLowerCase().includes(query.toLowerCase())
+    //             )) 
+    //         }));
+    //     }, 1000);
+    // }
+
     search(event){
         const self = this;
         //clear timeout every time search funcution is called 
@@ -52,7 +82,7 @@ class BookSearch extends Component{
                     books: res
                 }));
             });
-        }, 1000);
+        }, 500);
     }
 
     clearBookList(){
@@ -75,6 +105,7 @@ class BookSearch extends Component{
     }
 
     render(){
+        const { tempImage } = this.props;
         return(
         <div className="search-books">
             <div className="search-books-bar">
@@ -103,9 +134,13 @@ class BookSearch extends Component{
                         <li key={book.id}>
                         <div className="book">
                           <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+ book.imageLinks.smallThumbnail +')' }}></div>
+                              {book.imageLinks? (
+                                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' +  book.imageLinks.smallThumbnail +')' }}></div>
+                              ) : (
+                                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' +  tempImage +')' }}></div>
+                              )}
                             <div className="book-shelf-changer">
-                              <select value={book.shelf} onChange={(e)=>{this.handleShelfChange(book, e)}}>
+                              <select value={book.shelf? (book.shelf) : ('none')} onChange={(e)=>{this.handleShelfChange(book, e)}}>
                                 <option value="move" disabled>Move to...</option>
                                 <option value="currentlyReading" >Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>

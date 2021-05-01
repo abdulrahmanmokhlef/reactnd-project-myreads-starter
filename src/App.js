@@ -2,26 +2,19 @@ import React from 'react';
 import {Link, Route} from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
 import './App.css';
+import tempImage from './imgs/temp.png'; // Tell webpack this JS file uses this image
 import BookShelf from './BookShelf';
 import BookSearch from './BookSearch';
 
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
     currentlyReadingList: [],
     wantToReadList: [],
     readList: [],
-    showSearchPage: false
+    allBooks: []
   }
 
-  
   componentDidMount(){
-    debugger
     this.getAllBooks();
   }
 
@@ -35,8 +28,8 @@ class BooksApp extends React.Component {
       let currentlyReading = data.filter(d => d.shelf ==='currentlyReading');
       let wnatToRead = data.filter(d => d.shelf ==='wantToRead');
       let read = data.filter(d => d.shelf ==='read');
-
-      this.setShelves(currentlyReading, wnatToRead, read);
+      let allBooks = data;
+      this.setShelves(currentlyReading, wnatToRead, read, allBooks);
     });
   }
   
@@ -47,11 +40,12 @@ class BooksApp extends React.Component {
    * @param {*} wantToRead 
    * @param {*} read 
    */
-   setShelves(currentlyReading, wantToRead, read){
+   setShelves(currentlyReading, wantToRead, read, allBooks){
     this.setState(({
       currentlyReadingList: currentlyReading,
       wantToReadList: wantToRead,
-      readList: read
+      readList: read,
+      allBooks: allBooks
     }))
   }
 
@@ -93,11 +87,7 @@ class BooksApp extends React.Component {
     
   }
   
-  updateSate = ()=> {
-    this.setState(({
-      showSearchPage: false
-    }))
-  }
+
   render() {
     /**Set the shelves data*/
     const shelves = [
@@ -117,7 +107,12 @@ class BooksApp extends React.Component {
             <div className="list-books-content">
               <div>
                 {shelves.map(shelve =>(
-                  <BookShelf key={shelve.title} title={shelve.title} books={shelve.books} handleShelfChange={this.handleShelfChange.bind(this)}/>
+                  <BookShelf 
+                    key={shelve.title} 
+                    title={shelve.title} 
+                    books={shelve.books} 
+                    handleShelfChange={this.handleShelfChange.bind(this)}
+                    tempImage = {tempImage}/>
                 ))}
               </div>
             </div>
@@ -135,7 +130,8 @@ class BooksApp extends React.Component {
         <Route path="/search" render = {()=>(
           <BookSearch 
             handleShelfChange = {this.handleShelfChange.bind(this)} 
-            updateSate ={this.updateSate}/>
+            allBooks ={this.state.allBooks}
+            tempImage ={tempImage}/>
         )}/>
         
       </div>

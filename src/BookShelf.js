@@ -6,7 +6,8 @@ class BookShelf extends Component{
     static propsTypes = {
         title: PropTypes.string.isRequired,
         books : PropTypes.array.isRequired,
-        handleShelfChange: PropTypes.func.isRequired 
+        handleShelfChange: PropTypes.func.isRequired,
+        tempImage: PropTypes.string.isRequired 
     };
 
     //Update book shelve in the backend
@@ -24,8 +25,7 @@ class BookShelf extends Component{
 
     render(){
         debugger
-        const {title, books} = this.props;
-
+        const {title, books, tempImage} = this.props;
         return(
             <div className="bookshelf">
             <h2 className="bookshelf-title">{title}</h2>
@@ -35,9 +35,13 @@ class BookShelf extends Component{
                     <li key={book.id}>
                     <div className="book">
                       <div className="book-top">
-                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+ book.imageLinks.smallThumbnail +')' }}></div>
+                        {book.imageLinks? (
+                                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' +  book.imageLinks.smallThumbnail +')' }}></div>
+                              ) : (
+                                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' +  tempImage +')' }}></div>
+                        )}                        
                         <div className="book-shelf-changer">
-                          <select value={book.shelf} onChange={(e)=>{this.handleShelfChange(book, e)}}>
+                          <select value={book.shelf? (book.shelf) : ('none')} onChange={(e)=>{this.handleShelfChange(book, e)}}>
                             <option value="move" disabled>Move to...</option>
                             <option value="currentlyReading" >Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
