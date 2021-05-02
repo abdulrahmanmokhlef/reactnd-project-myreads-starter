@@ -10,7 +10,7 @@ shelves, the four options as follow:
 * None  
 
 
-# Installation instructions
+## Installation instructions
 
 * Open a terminal and cd to the project directory
 * run `npm install` command to install all project dependenceies

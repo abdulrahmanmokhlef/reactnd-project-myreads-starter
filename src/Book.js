@@ -1,17 +1,11 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types'
 
 
-class Book extends  Component{
-    static propTypes = {
-        book: PropTypes.object.isRequired,
-        handleShelfChange: PropTypes.func.isRequired,
-        tempImage: PropTypes.string.isRequired 
-    }
+const Book = (props)=> {
+   
+        const { book , handleShelfChange, tempImage} = props;
 
-
-    render(){
-        const { book , handleShelfChange, tempImage} = this.props;
         return(
             <div className="book">
                       <div className="book-top">
@@ -38,7 +32,13 @@ class Book extends  Component{
                           )}
                     </div>
         )
-    }
+}
+
+
+Book.propTypes = {
+  book: PropTypes.object.isRequired,
+  handleShelfChange: PropTypes.func.isRequired,
+  tempImage: PropTypes.string.isRequired 
 }
 
 export default Book;
