@@ -49,11 +49,17 @@ class BooksApp extends React.Component {
     }))
   }
 
+ /**
+  * @description it fires when book shelf is changed and update shelves in all books
+  * handleShelfChange
+  * @param {*} book book objec
+  * @param {*} shelf shelf name is a string value
+  */
   handleShelfChange(book, shelf){
       debugger
       let {currentlyReadingList, wantToReadList, readList}  = this.state;
       const originalBookShelf = book.shelf; 
-      
+
       //Add book to selected shelf
       if(shelf ==='currentlyReading'){
         book.shelf = shelf;   //set the book to new shelf
@@ -75,16 +81,15 @@ class BooksApp extends React.Component {
         readList = readList.filter(b => b.id !== book.id)
       }
 
+      // update allBook list with the updated books list  
+      const allBooks = [...currentlyReadingList, ...wantToReadList, ...readList];
+
       this.setState(({
         currentlyReadingList: currentlyReadingList,
         wantToReadList: wantToReadList,
-        readList: readList
+        readList: readList,
+        allBooks: allBooks 
       }));
-
-
-     //this is altenative way to make changes appear on the home page but is will coast a server request 
-     //this.getAllBooks();
-    
   }
   
 

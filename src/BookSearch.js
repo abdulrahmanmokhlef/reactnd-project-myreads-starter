@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Debounce } from 'react-throttle';
 import * as BooksAPI from './BooksAPI';
 import Book from './Book';
 
@@ -15,59 +16,36 @@ class BookSearch extends Component{
         books: []
     };
 
-    componentDidMount(){
-         this.timeout = null;
-    }
-
-    updateSate = ()=>{
-        debugger
-        this.setState({ showSearchPage: false})
-        this.props.updateSate();
-    };
-
-    setTimeoutFunc = ()=>{
-       
-        
-    }
-
-
     search(event){
         debugger
-        const self = this;
         const {allBooks} = this.props;
-        //clear timeout every time search funcution is called 
-        clearTimeout(self.timeout);
-
+       
         const query = event.target.value.trim();
         if(query === '') {
             this.clearBookList();
             return;    
         }
 
-        //set timeout to 1 second in order to start search right after the user stop typing.
-        self.timeout = setTimeout(function () {
+        BooksAPI.search(query).then(res =>{
             debugger
-            BooksAPI.search(query).then(res =>{
-                debugger
-                if(!res || res.error ==="empty query" ){
-                    self.clearBookList();
-                    return; 
-                }
-                //this easiest way to iterate over and arrea
+            if(!res || res.error ==="empty query" ){
+                this.clearBookList();
+                return; 
+            }
 
-                res.forEach(book => {
-                    debugger
-                    const shelvedBook = allBooks.find(book2 => book2.id === book.id);
-                    if(shelvedBook){
-                        book.shelf = shelvedBook.shelf;
-                    }
-                });
-                    
-                self.setState(({
-                    books: res
-                }));
+            //set sheves of books on shelves to the books returnd from search
+            res.forEach(book => {
+                const shelvedBook = allBooks.find(book2 => book2.id === book.id);
+                if(shelvedBook){
+                    book.shelf = shelvedBook.shelf;
+                }
             });
-        }, 500);
+                
+            this.setState(({
+                books: res
+            }));
+        });
+
     }
 
     clearBookList(){
@@ -101,7 +79,9 @@ class BookSearch extends Component{
                 </Link> 
               
               <div className="search-books-input-wrapper">
-                <input type="text" onChange = {this.search.bind(this)} placeholder="Search by title or author"/>
+                <Debounce time="1500" handler="onChange">
+                    <input type="text" onChange = {this.search.bind(this)} placeholder="Search by title or author"/>
+                </Debounce>
               </div>
             </div>
             <div className="search-books-results">
